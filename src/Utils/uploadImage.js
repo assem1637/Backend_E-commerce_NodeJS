@@ -42,3 +42,14 @@ export const uploadSingleImage = (path) => {
     return coreUpload().single(path);
 
 };
+
+
+
+
+// Upload Fields Image
+
+export const uploadFieldsImage = (path) => {
+
+    return coreUpload().fields(path);
+
+};

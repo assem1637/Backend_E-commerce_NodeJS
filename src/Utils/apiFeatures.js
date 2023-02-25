@@ -14,7 +14,7 @@ class ApiFeatures {
         // 1- Pagination
 
         let page = (this.QueryString.page * 1 > 0 ? this.QueryString.page * 1 : 1) || 1;
-        let limit = 5;
+        let limit = 10;
         let skip = (page - 1) * limit;
 
         this.MongooseQuery.skip(skip).limit(limit);

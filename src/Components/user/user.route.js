@@ -16,7 +16,7 @@ router.route("/:id").get(getSpecificUser).put(uploadSingleImage("profileImg"), u
 
 router.post("/signup", uploadSingleImage("profileImg"), signup);
 router.post("/signin", signin);
-router.post("/confirm/:token", confirmation);
+router.get("/confirm/:token", confirmation);
 
 
 

@@ -97,7 +97,7 @@ export const signin = ErrorHandler(async (req, res, next) => {
 
     if (user) {
 
-        const match = await bcrypt.compare(password, user.password);
+        const match = await bcrypt.compare(req.body.password, user.password);
 
         if (match) {
 

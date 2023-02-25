@@ -21,7 +21,7 @@ const confirmEmail = async (email, token, protocol, host) => {
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"E-Shop 👻" <foo@example.com>', // sender address
+        from: '"E-Shop 👻" <assemsaeed16378@outlook.com>', // sender address
         to: email, // list of receivers
         subject: "Confirm Email ✔", // Subject line
         text: "Confirm Email", // plain text body

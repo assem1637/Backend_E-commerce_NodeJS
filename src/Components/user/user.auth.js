@@ -170,3 +170,98 @@ export const confirmation = ErrorHandler(async (req, res, next) => {
     });
 
 });
+
+
+
+
+
+
+
+
+
+// Authentication
+
+
+export const Authentication = ErrorHandler(async (req, res, next) => {
+
+    const token = req.header("token");
+
+    jwt.verify(token, process.env.SECRET_KEY_SIGNIN, async function (err, decoded) {
+
+
+        if (err) {
+
+            res.status(400).json({ message: "Invalid Token", err });
+
+        } else {
+
+
+            const user = await userModel.findOne({ _id: decoded.id });
+
+
+            if (user) {
+
+
+                if (user.passwordChangedAt) {
+
+
+                    if (user.passwordChangedAt > decoded.iat) {
+
+                        res.status(400).json({ message: "Your Password Changed" });
+
+                    } else {
+
+                        req.body.myUser = user;
+                        console.log(req.body.myUser);
+                        next();
+
+                    };
+
+
+                } else {
+
+                    req.body.myUser = user;
+                    console.log(req.body.myUser);
+                    next();
+
+                };
+
+            } else {
+
+                res.status(400).json({ message: "User Not Found" });
+
+            };
+
+        };
+
+    });
+
+});
+
+
+
+
+
+
+
+
+// Authorization
+
+
+export const Authorization = (roles) => {
+
+    return (req, res, next) => {
+
+        if (roles.includes(req.body.myUser.role)) {
+
+            next();
+
+        } else {
+
+            res.status(400).json({ message: "You Not Authorized For Do That" });
+
+        };
+
+    };
+
+};

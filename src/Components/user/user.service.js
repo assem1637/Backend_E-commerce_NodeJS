@@ -158,6 +158,7 @@ export const updateSpecificUser = ErrorHandler(async (req, res, next) => {
         bcrypt.hash(req.body.password, 5, async function (err, hash) {
 
             req.body.password = hash;
+            req.body.passwordChangedAt = parseInt(Date.now() / 1000);
 
             const user = await userModel.findByIdAndUpdate({ _id: id }, req.body, { new: true });
 
@@ -205,6 +206,57 @@ export const deleteSpecificUser = ErrorHandler(async (req, res, next) => {
     if (user) {
 
         res.status(200).json({ message: "Deleted", data: user });
+
+    } else {
+
+        res.status(400).json({ message: "User Not Found" });
+
+    };
+
+});
+
+
+
+
+
+
+// Chang Password
+
+
+export const changePassword = ErrorHandler(async (req, res, next) => {
+
+    const { id } = req.params;
+    const user = await userModel.findOne({ _id: id });
+
+
+    if (user) {
+
+
+        if (req.body.password) {
+
+
+            bcrypt.hash(req.body.password, 5, async function (err, hash) {
+
+                req.body.password = hash;
+                req.body.passwordChangedAt = parseInt(Date.now() / 1000);
+
+                const user = await userModel.findByIdAndUpdate({ _id: id }, req.body, { new: true });
+
+                if (user) {
+
+                    res.status(200).json({ message: "Success Updated", data: user });
+
+                } else {
+
+                    res.status(200).json({ message: "User Not Found" });
+
+                };
+
+            });
+
+
+        };
+
 
     } else {
 

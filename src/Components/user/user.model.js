@@ -85,6 +85,9 @@ const userSchema = mongoose.Schema({
     },
 
 
+    passwordChangedAt: Date,
+
+
 }, { timestamps: true });
 
 

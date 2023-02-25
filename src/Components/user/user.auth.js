@@ -4,7 +4,7 @@ import cloudinary from 'cloudinary';
 import confirmEmail from '../../Utils/sendConfirmEmail.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-
+import sendResetCode from '../../Utils/sendResetCode.js';
 
 
 
@@ -265,3 +265,101 @@ export const Authorization = (roles) => {
     };
 
 };
+
+
+
+
+
+
+// Forget Password
+
+export const forgetPassword = ErrorHandler(async (req, res, next) => {
+
+    const user = await userModel.findOne({ email: req.body.email });
+
+    if (user) {
+
+        let resetCode = Math.floor((Math.random() * 1000000) + 1).toString();
+
+        bcrypt.hash(resetCode, 5, async function (err, hash) {
+
+            user.resetCode = hash;
+            await user.save();
+            sendResetCode(user.email, user.name, resetCode);
+            res.status(200).json({ message: "Success Send Reset Code" });
+
+        });
+
+    } else {
+
+        res.status(400).json({ message: `We couldn't find an account associated with ${req.body.email}. Please try with an alternate email.` });
+
+    };
+
+});
+
+
+
+
+
+
+// Verify Reset Code
+
+export const verifyResetCode = ErrorHandler(async (req, res, next) => {
+
+    const userId = req.header("userId");
+    const user = await userModel.findOne({ _id: userId });
+
+    if (user) {
+
+        const match = await bcrypt.compare(req.body.resetCode, user.resetCode);
+
+        if (match) {
+
+            res.status(200).json({ message: "Success Confirm Reset Code" });
+
+        } else {
+
+            res.status(400).json({ message: "That's not the right code" });
+
+        };
+
+
+    } else {
+
+        res.status(400).json({ message: "User Not Found" });
+
+    };
+
+});
+
+
+
+
+
+
+// Change Password After Confirm Reset Code
+
+export const changePasswordAfterConfirmResetCode = ErrorHandler(async (req, res, next) => {
+
+    const userId = req.header("userId");
+    const user = await userModel.findOne({ _id: userId });
+
+    if (user) {
+
+        bcrypt.hash(req.body.password, 5, async function (err, hash) {
+
+            user.password = hash;
+            user.passwordChangedAt = parseInt(Date.now() / 1000);
+            await user.save();
+            res.status(200).json({ message: "Success Change Password" });
+
+        });
+
+    } else {
+
+        res.status(400).json({ message: "User Not Found" });
+
+    };
+
+});

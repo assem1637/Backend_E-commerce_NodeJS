@@ -87,6 +87,12 @@ const userSchema = mongoose.Schema({
 
     passwordChangedAt: Date,
 
+    resetCode: {
+
+        type: String,
+
+    },
+
 
 }, { timestamps: true });
 

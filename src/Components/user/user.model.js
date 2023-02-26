@@ -104,6 +104,27 @@ const userSchema = mongoose.Schema({
     ],
 
 
+
+    deliveryAddress: [
+
+        {
+
+            name: String,
+            address: String,
+            phone: String,
+            addressLabel: {
+
+                type: String,
+                enum: ["Home", "Work"],
+                default: "Home",
+
+            },
+
+        },
+
+    ],
+
+
 }, { timestamps: true });
 
 

@@ -22,7 +22,7 @@ import brandRouter from './src/Components/brand/brand.route.js';
 import productRouter from './src/Components/product/product.route.js';
 import userRouter from './src/Components/user/user.route.js';
 import wishlistRouter from './src/Components/wishlist/wishlist.route.js';
-
+import addressRouter from './src/Components/address/address.route.js';
 
 
 
@@ -52,6 +52,7 @@ app.use("/api/v1/brand", brandRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/wishlist", wishlistRouter);
+app.use("/api/v1/address", addressRouter);
 
 
 

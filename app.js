@@ -21,6 +21,8 @@ import subCategoryRouter from './src/Components/subCategory/subCategory.route.js
 import brandRouter from './src/Components/brand/brand.route.js';
 import productRouter from './src/Components/product/product.route.js';
 import userRouter from './src/Components/user/user.route.js';
+import wishlistRouter from './src/Components/wishlist/wishlist.route.js';
+
 
 
 
@@ -49,6 +51,7 @@ app.use("/api/v1/subcategory", subCategoryRouter);
 app.use("/api/v1/brand", brandRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/wishlist", wishlistRouter);
 
 
 

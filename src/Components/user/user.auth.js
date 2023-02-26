@@ -212,7 +212,6 @@ export const Authentication = ErrorHandler(async (req, res, next) => {
                     } else {
 
                         req.body.myUser = user;
-                        console.log(req.body.myUser);
                         next();
 
                     };
@@ -221,7 +220,6 @@ export const Authentication = ErrorHandler(async (req, res, next) => {
                 } else {
 
                     req.body.myUser = user;
-                    console.log(req.body.myUser);
                     next();
 
                 };

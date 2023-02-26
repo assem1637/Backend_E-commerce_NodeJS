@@ -47,7 +47,7 @@ const ErrorHandler = (fun) => {
 
 export const getAllUsers = ErrorHandler(async (req, res, next) => {
 
-    const allUsers = await userModel.find({});
+    const allUsers = await userModel.find({}).populate("wishlist", "name price imageCover priceAfterDiscount");
     res.status(200).json({ message: "Success", data: allUsers });
 
 });

@@ -49,7 +49,7 @@ export const getAllProducts = ErrorHandler(async (req, res, next) => {
 
     // MongooseQuery
 
-    let MongooseQuery = productModel.find({}).populate("category subcategory brand", "name");
+    let MongooseQuery = productModel.find({}).populate("category subcategory brand", "name").populate("reviews", "comment ratingAverage");
 
     let apiFeatures = new ApiFeatures(MongooseQuery, req.query).search().pagination().fields().sort().filter();
 

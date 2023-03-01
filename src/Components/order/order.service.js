@@ -101,6 +101,29 @@ export const paymentWithCash = ErrorHandler(async (req, res, next) => {
 
 
 
+// Get All Order For Specific User
+
+export const ordersOfUser = ErrorHandler(async (req, res, next) => {
+
+    const orders = await orderModel.find({ user: req.body.myUser.id });
+
+    if (orders) {
+
+        res.status(200).json({ message: "Success", data: orders });
+
+    } else {
+
+        res.status(400).json({ message: "Not Found Any Order" });
+
+    };
+
+});
+
+
+
+
+
+
 // Update Pay With Admin
 
 export const updatePay = ErrorHandler(async (req, res, next) => {

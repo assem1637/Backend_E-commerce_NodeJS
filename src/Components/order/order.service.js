@@ -190,37 +190,50 @@ export const checkoutSession = ErrorHandler(async (req, res, next) => {
     const cart = await cartModel.findOne({ user: req.body.myUser.id });
     const user = await userModel.findOne({ _id: req.body.myUser.id });
 
-    const token = jwt.sign({ payWithVisa: true, cartId: cart._id, userId: user._id }, process.env.SECRET_KEY_PAY_WITH_VISA);
 
-    const session = await Stripe.checkout.sessions.create({
-        line_items: [
-            {
-                // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+    if (cart) {
 
-                price_data: {
+        const firstProduct = await productModel.findOne({ _id: cart.cartItems[0].product });
 
-                    currency: "USD",
+        const token = jwt.sign({ payWithVisa: true, cartId: cart._id, userId: user._id }, process.env.SECRET_KEY_PAY_WITH_VISA);
 
-                    product_data: {
+        const session = await Stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
 
-                        name: user.name,
+                    price_data: {
+
+                        currency: "USD",
+
+                        product_data: {
+
+                            name: user.name,
+                            images: [firstProduct.imageCover],
+
+                        },
+
+                        unit_amount: cart.totlaPriceAfterDiscount * 100,
 
                     },
 
-                    unit_amount: cart.totlaPriceAfterDiscount * 100,
-
+                    quantity: 1,
                 },
-
-                quantity: 1,
-            },
-        ],
-        mode: 'payment',
-        success_url: `${req.protocol}://${req.headers.host}/api/v1/order/paymentWithStripe/${token}`,
-        cancel_url: `${req.protocol}://${req.headers.host}/cart`,
-    });
+            ],
+            mode: 'payment',
+            success_url: `${req.protocol}://${req.headers.host}/api/v1/order/paymentWithStripe/${token}`,
+            cancel_url: `${req.protocol}://${req.headers.host}/cart`,
+        });
 
 
-    res.status(200).json({ message: "Success", data: session.url });
+        res.status(200).json({ message: "Success", data: session.url });
+
+
+    } else {
+
+        res.status(400).json({ message: "Cart Not Found" });
+
+    };
 
 });
 

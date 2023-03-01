@@ -123,6 +123,7 @@ export const ordersOfUser = ErrorHandler(async (req, res, next) => {
 
 
 
+
 // Update Pay With Admin
 
 export const updatePay = ErrorHandler(async (req, res, next) => {
@@ -144,6 +145,7 @@ export const updatePay = ErrorHandler(async (req, res, next) => {
     };
 
 });
+
 
 
 
@@ -188,7 +190,7 @@ export const checkoutSession = ErrorHandler(async (req, res, next) => {
     const cart = await cartModel.findOne({ user: req.body.myUser.id });
     const user = await userModel.findOne({ _id: req.body.myUser.id });
 
-    const token = jwt.sign({ payWithVisa: true }, process.env.SECRET_KEY_PAY_WITH_VISA);
+    const token = jwt.sign({ payWithVisa: true, cartId: cart._id, userId: user._id }, process.env.SECRET_KEY_PAY_WITH_VISA);
 
     const session = await Stripe.checkout.sessions.create({
         line_items: [
@@ -232,10 +234,6 @@ export const checkoutSession = ErrorHandler(async (req, res, next) => {
 
 export const paymentWithStripe = ErrorHandler(async (req, res, next) => {
 
-    const cart = await cartModel.findOne({ user: req.body.myUser.id });
-    const user = await userModel.findOne({ _id: req.body.myUser.id });
-
-
     jwt.verify(req.params.token, process.env.SECRET_KEY_PAY_WITH_VISA, async function (err, decoded) {
 
         if (err) {
@@ -244,6 +242,8 @@ export const paymentWithStripe = ErrorHandler(async (req, res, next) => {
 
         } else {
 
+            const cart = await cartModel.findOne({ _id: decoded.cartId });
+            const user = await userModel.findOne({ _id: decoded.userId });
 
             if (decoded.payWithVisa) {
 
@@ -281,7 +281,7 @@ export const paymentWithStripe = ErrorHandler(async (req, res, next) => {
                     await cartModel.findOneAndDelete({ user: cart.user });
 
 
-                    res.status(200).json({ message: "Success Order", data: newOrder });
+                    res.status(200).json({ message: "Success Order" });
 
                 } else {
 
@@ -298,5 +298,3 @@ export const paymentWithStripe = ErrorHandler(async (req, res, next) => {
     });
 
 });
-
-

@@ -6,8 +6,10 @@ process.on("uncaughtException", (err) => {
 
 
 
+
 import dotenv from 'dotenv'
 dotenv.config({ path: "./config/.env" });
+
 
 
 
@@ -26,6 +28,7 @@ import addressRouter from './src/Components/address/address.route.js';
 import reviewRouter from './src/Components/review/review.route.js';
 import couponRouter from './src/Components/coupon/coupon.route.js';
 import cartRouter from './src/Components/cart/cart.route.js';
+import orderRouter from './src/Components/order/order.route.js';
 
 
 
@@ -59,6 +62,8 @@ app.use("/api/v1/address", addressRouter);
 app.use("/api/v1/review", reviewRouter);
 app.use("/api/v1/coupon", couponRouter);
 app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/order", orderRouter);
+
 
 
 

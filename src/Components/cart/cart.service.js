@@ -41,7 +41,7 @@ export const getAllCarts = ErrorHandler(async (req, res, next) => {
 
 // Function To Calc Total Price 
 
-const calcTotalPrice = (cartItems) => {
+export const calcTotalPrice = (cartItems) => {
 
 
     let totalPrice = 0;

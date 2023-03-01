@@ -11,7 +11,7 @@ const router = Router();
 
 
 
-router.route("/").get(getAllUsers).post(Authentication, Authorization(["admin"]), uploadSingleImage("profileImg"), createUser);
+router.route("/").get(Authentication, Authorization(["admin"]), getAllUsers).post(Authentication, Authorization(["admin"]), uploadSingleImage("profileImg"), createUser);
 router.route("/:id").get(getSpecificUser).put(Authentication, Authorization(["admin", "user"]), uploadSingleImage("profileImg"), updateSpecificUser).delete(Authentication, Authorization(["admin"]), deleteSpecificUser);
 
 router.post("/signup", uploadSingleImage("profileImg"), signup);

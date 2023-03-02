@@ -16,6 +16,7 @@ dotenv.config({ path: "./config/.env" });
 
 import express from 'express';
 import dbConnection from './src/DB/dbConnection.js';
+import rateLimit from 'express-rate-limit'
 import morgan from 'morgan';
 import AppError from './src/Utils/appErrors.js';
 import categoryRouter from './src/Components/category/category.route.js';
@@ -29,6 +30,9 @@ import reviewRouter from './src/Components/review/review.route.js';
 import couponRouter from './src/Components/coupon/coupon.route.js';
 import cartRouter from './src/Components/cart/cart.route.js';
 import orderRouter from './src/Components/order/order.route.js';
+import hpp from 'hpp';
+import mongoSanitize from 'express-mongo-sanitize';
+import xss from 'xss-clean';
 
 
 
@@ -39,7 +43,7 @@ const port = process.env.PORT || 3000;
 dbConnection();
 
 
-app.use(express.json());
+app.use(express.json({ limit: "20kb" }));
 
 
 
@@ -49,6 +53,36 @@ if (process.env.MODE_NOW === "Development") {
 
 };
 
+
+// To remove data using these defaults:
+app.use(mongoSanitize());
+app.use(xss());
+
+
+// middleware to protect against HTTP Parameter Pollution attacks
+
+app.use(hpp({
+    whitelist: [
+
+        "price",
+        "soldCount",
+        "quantity",
+        "ratingCount",
+        "ratingAverage",
+
+    ]
+}));
+
+
+const createAccountLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 50, // Limit each IP to 50 create account requests per `window` (here, per 15 minutes)
+    message:
+        'Too many accounts created from this IP, please try again after after 15 minutes',
+});
+
+// Apply the rate limiting middleware to all requests
+app.use("/api", createAccountLimiter);
 
 
 
@@ -102,6 +136,7 @@ app.listen(port, () => {
 });
 
 
+// Handle rejection outside express
 
 process.on("unhandledRejection", (err) => {
 

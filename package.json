@@ -15,6 +15,9 @@
     "cloudinary": "^1.34.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^6.7.0",
+    "hpp": "^0.2.3",
     "joi": "^17.8.3",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.10.0",
@@ -23,6 +26,7 @@
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.20",
     "slugify": "^1.6.5",
-    "stripe": "^11.12.0"
+    "stripe": "^11.12.0",
+    "xss-clean": "^0.1.1"
   }
 }
